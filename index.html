@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İnteraktif PMP Çalışma Planı</title>
+    <title>İnteraktif PMP Çalışma Planı (Nihai Sürüm)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Chosen Palette: Calm Harmony (Slate, Indigo, Amber) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate, Indigo, Amber, Red (for Udemy), Teal (for Quizzes) -->
     <!-- Application Structure Plan: The application uses a task-oriented, dashboard-like structure with a primary accordion view for the 14-week plan. This was chosen to allow users to focus on one week at a time, preventing information overload, while still providing a clear sense of progression through a main progress bar and phase-based navigation. Checkboxes for daily completion offer interactive feedback and motivation. The structure is designed for the primary user task: 'What do I need to study today?'. -->
     <!-- Visualization & Content Choices: 
-        - Overall Structure: Report's 14-week plan -> Goal: Guide user daily -> Viz: Interactive Accordion List with Checkboxes -> Interaction: Click to expand, check to complete -> Justification: Breaks down a long plan into manageable daily chunks, provides progress tracking. -> Method: JS-rendered HTML/Tailwind.
-        - Phase Breakdown: Report's 4 phases -> Goal: Provide a high-level overview -> Viz: Donut Chart -> Interaction: Static display -> Justification: Quickly communicates the proportional effort for each phase of the study plan. -> Library: Chart.js/Canvas.
-        - Overall Progress: User's completion status -> Goal: Motivate user -> Viz: Horizontal Progress Bar -> Interaction: Updates on checkbox click -> Justification: Constant visual reinforcement of accomplishment. -> Method: HTML/Tailwind + JS.
-        - Daily Details (İpucu, Soru vb.): Report's daily guidance -> Goal: Inform and reinforce -> Viz: Icon-prefixed text blocks -> Interaction: Static -> Justification: Uses visual cues (icons) to differentiate content types for better scannability. -> Method: HTML/Tailwind.
+         - Overall Structure: Report's 14-week plan -> Goal: Guide user daily -> Viz: Interactive Accordion List with Checkboxes -> Interaction: Click to expand, check to complete -> Justification: Breaks down a long plan into manageable daily chunks, provides progress tracking. -> Method: JS-rendered HTML/Tailwind.
+         - Phase Breakdown: Report's 4 phases -> Goal: Provide a high-level overview -> Viz: Donut Chart -> Interaction: Static display -> Justification: Quickly communicates the proportional effort for each phase of the study plan. -> Library: Chart.js/Canvas.
+         - Overall Progress: User's completion status -> Goal: Motivate user -> Viz: Horizontal Progress Bar -> Interaction: Updates on checkbox click -> Justification: Constant visual reinforcement of accomplishment. -> Method: HTML/Tailwind + JS.
+         - Daily Details (İpucu, Soru vb.): Report's daily guidance -> Goal: Inform and reinforce -> Viz: Icon-prefixed text blocks -> Interaction: Static -> Justification: Uses visual cues (icons) to differentiate content types for better scannability. -> Method: HTML/Tailwind.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -55,7 +58,7 @@
         <!-- HEADER -->
         <header class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold text-indigo-600">PMP Sınavı Yol Haritası</h1>
-            <p class="text-slate-500 mt-2 text-lg">14 Haftalık İnteraktif Çalışma Planı</p>
+            <p class="text-slate-500 mt-2 text-lg">14 Haftalık İnteraktif Çalışma Planı (Nihai Sürüm)</p>
         </header>
 
         <!-- DASHBOARD -->
@@ -94,350 +97,384 @@
     </div>
 
     <script>
+        // Data structure for the entire 14-week plan.
+        // This is the complete and final version, incorporating all relevant course videos.
         const allWeeksData = [
-            // FAZ 1: Temelleri Atma ve Klasik Yaklaşımı Anlama (Hafta 1-4)
-            { week: 1, phase: 1, title: "Proje Yönetimine Giriş", days: [
-                { day: "Pazartesi", title: "Proje Nedir?", tasks: [
-                    { type: "Okunacak Bölümler", content: "Süreç Grupları Kılavuzu (SGK) - Bölüm 1.1: Proje Yönetimi ve Bölüm 1.2: Projeler." },
-                    { type: "Alınacak Notlar", content: "'Proje' tanımını kendi cümlelerinizle yazın. Projelerin 5 temel özelliğini (geçici, özgün ürün/hizmet/sonuç vb.) listeleyin. İş değeri (business value) kavramını ve örneklerini (maddi, maddi olmayan) özetleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Projenin operasyondan farkını net olarak anlamak. 2) Her projenin temel amacının 'iş değeri' yaratmak olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Karşılaştığınız her yeni kavram için (örn: 'Proje'), aklınıza gelen gerçek hayattan bir örnek düşünün. Bu, soyut bilgiyi somutlaştırır." },
-                    { type: "Tekrar Sorusu", content: "Bugün öğrendiklerime göre, çalıştığım yerdeki bir faaliyeti 'proje' olarak tanımlayabilir miyim? Neden?" }
+            // FAZ 1: Temeller ve Geleneksel Yaklaşım (Hafta 1-4)
+            { week: 1, phase: 1, title: "Proje Yönetimi Evreni", days: [
+                { day: "Pazartesi", title: "Proje, Program, Portföy", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 1.1, 1.2, 1.3, 1.4, 1.5." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'What is a Project', 'What is Project Management', 'What is Program Management', 'What is Portfolio Management', 'Operations Management'. Toplam: ~19 dk." },
+                    { type: "Alınacak Notlar", content: "Proje, program ve portföy arasındaki hiyerarşiyi gösteren bir şema çizin. Her birinin amacını karşılaştırın." },
+                    { type: "Günün İpucu", content: "Portföy 'doğru işleri yapmak', proje ise 'işleri doğru yapmaktır'." }
                 ]},
-                { day: "Salı", title: "Stratejik Bakış Açısı", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 1.3: Programlar ve Program Yönetimi, Bölüm 1.4: Portföyler ve Portföy Yönetimi, Bölüm 1.5: Portföyler, Programlar ve Projeler Arasındaki İlişki." },
-                    { type: "Alınacak Notlar", content: "Proje, program ve portföy arasındaki hiyerarşiyi gösteren bir piramit veya akış şeması çizin. Her birinin amacını ve yöneticisinin sorumluluklarını bir tablo halinde karşılaştırın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Projelerin, programlar aracılığıyla portföylere ve dolayısıyla organizasyon stratejisine nasıl hizmet ettiğini anlamak. 2) Portföy yönetiminin 'doğru işleri yapmak', proje yönetiminin ise 'işleri doğru yapmak' olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Not alırken farklı renkler kullanın. Örneğin, proje için mavi, program için yeşil, portföy için mor. Bu, görsel hafızanızı tetikler." },
-                    { type: "Tekrar Sorusu", content: "Proje, program ve portföy arasındaki en temel fark nedir ve yarın hatırlamak istediğim en önemli anahtar kelime hangisidir?" }
+                { day: "Salı", title: "Değer, Değişim ve Yaşam Döngüsü", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 1.6, 1.7." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'What is the value of the project', 'Projects enable changes', 'Phases and Deliverables', 'Project Life Cycle', 'Project Management Approaches'. Toplam: ~27 dk." },
+                    { type: "Alınacak Notlar", content: "Öngörücü, yinelemeli, artırımlı ve çevik yaşam döngülerini bir tablo ile karşılaştırın." },
+                    { type: "Günün İpucu", content: "Her projenin temel amacı 'iş değeri' yaratmaktır." }
                 ]},
-                { day: "Çarşamba", title: "Proje Yaşam Döngüleri", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 1.6: Organizasyonel Proje Yönetimi (OPY), Bölüm 1.7: Proje Bileşenleri ve Dikkat Edilecek Hususlar." },
-                    { type: "Alınacak Notlar", content: "Öngörücü (predictive/waterfall), Yinelemeli (iterative), Artırımlı (incremental) ve Çevik (agile) yaşam döngülerini bir tablo ile karşılaştırın. Her biri için 'Gereksinimler', 'Aktiviteler', 'Teslimat' ve 'Hedef' sütunları oluşturun." },
-                    { type: "Öğrenme Çıktısı", content: "1) Tek bir 'doğru' yaşam döngüsü olmadığını, projenin belirsizlik seviyesine göre seçim yapıldığını anlamak. 2) Hibrit (hybrid) yaklaşımın ne anlama geldiğini kavramak." },
-                    { type: "Günün İpucu", content: "Karmaşık konuları anlamak için YouTube'da kısa animasyonlu videolar aratın (örn: 'predictive vs agile life cycle animation')." },
-                    { type: "Tekrar Sorusu", content: "Eğer bir bina inşa ediyor olsaydım hangi yaşam döngüsünü, eğer yeni bir mobil uygulama geliştiriyor olsaydım hangisini seçerdim? Neden?" }
+                { day: "Çarşamba", title: "Organizasyonel Yapı ve Çevre", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 2.1, 2.2, 2.3, 2.5." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Project Governance', 'Project Management Office', 'Organizational Structures', 'Enterprise Environmental Factors', 'Organization Process Assets'. Toplam: ~24 dk." },
+                    { type: "Alınacak Notlar", content: "Fonksiyonel, Matris (Zayıf, Dengeli, Güçlü) ve Proje Odaklı yapıları karşılaştırın. ÇİF ve OSV farklarını not alın." },
+                    { type: "Günün İpucu", content: "ÇİF'ler 'hava durumu' (kontrol dışı), OSV'ler 'alet çantasıdır' (kurum içi birikim)." }
                 ]},
-                { day: "Perşembe", title: "Projenin Çevresi", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 2.1: Çevresel İşletme Faktörleri, Bölüm 2.2: Organizasyonel Süreç Varlıkları." },
-                    { type: "Alınacak Notlar", content: "Bir T-şeması çizin. Sol tarafa Çevresel İşletme Faktörleri (ÇİF/EEF), sağ tarafa Organizasyonel Süreç Varlıkları (OSV/OPA) yazın. Her birinin altına en az 5 örnek listeleyin ve hangilerinin 'içsel', hangilerinin 'dışsal' olduğunu belirtin." },
-                    { type: "Öğrenme Çıktısı", content: "1) ÇİF'lerin projeye 'dayatılan' koşullar (kanun, kültür, pazar durumu), OSV'lerin ise organizasyonun 'kendi birikimi' (dersler, şablonlar, politikalar) olduğunu ayırt etmek. 2) Bu iki faktörün projenin tüm süreçlerini etkilediğini anlamak." },
-                    { type: "Günün İpucu", content: "ÇİF'leri 'hava durumu' (kontrol edemezsin, uyum sağlarsın), OSV'leri ise 'alet çantan' (kullanmak için oradadırlar) gibi düşünün." },
-                    { type: "Tekrar Sorusu", content: "Proje planı şablonu bir ÇİF midir, OSV midir? Peki ya dolar kuru? Bu ayrımı yarın nasıl hatırlayacağım?" }
+                { day: "Perşembe", title: "Proje Yöneticisinin Rolü", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 3.1, 3.2, 3.3, 3.4." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Roles of a Project manager', 'Project Bosses', 'Product vs Project Management', 'Leadership vs. Management', 'Emotional Intelligence'. Toplam: ~35 dk." },
+                    { type: "Alınacak Notlar", content: "PMI Yetenek Üçgeni'ni (Teknik, Liderlik, Stratejik) çizin. Liderlik ve yöneticilik farklarını yazın." },
+                    { type: "Günün İpucu", content: "Proje yöneticisinin zamanının %90'ı iletişimle geçer." }
                 ]},
-                { day: "Cuma", title: "Organizasyonun Yapısı", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 2.3: Yönetişim, Bölüm 2.5: Organizasyon Yapıları." },
-                    { type: "Alınacak Notlar", content: "Fonksiyonel, Zayıf Matris, Dengeli Matris, Güçlü Matris ve Proje Odaklı (Project-Oriented) yapıları bir spektrum üzerinde çizin. Her bir yapı için Proje Yöneticisinin Yetkisi, Kaynakların Durumu ve Bütçe Kontrolü gibi özellikleri not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Organizasyon yapısının, proje yöneticisinin gücünü, kaynaklara erişimini ve iletişim kanallarını doğrudan etkilediğini anlamak. 2) 'Proje Koordinatörü' ve 'Proje Yöneticisi' arasındaki yetki farkını kavramak." },
-                    { type: "Günün İpucu", content: "Her organizasyon yapısı için aklınızda bir şirket canlandırın. (örn: Fonksiyonel için bir devlet kurumu, Proje Odaklı için bir inşaat firması)." },
-                    { type: "Tekrar Sorusu", content: "Bugün öğrendiğim organizasyon yapılarından hangisinde bir proje yöneticisi olarak çalışmak en kolay/en zor olurdu? Neden?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Stakeholders', 'What are milestones', 'Areas of a project', 'Risk vs. Issues vs. Assumptions vs. Constraints', 'Project Constraints'. Toplam: ~26 dk." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Terms and process groups Questions' quizini çözün." },
+                    { type: "Alınacak Notlar", content: "Bu haftanın en önemli 5 kavramını kendi cümlelerinizle özetleyin." }
                 ]}
             ]},
-            { week: 2, phase: 1, title: "Proje Yöneticisinin Rolü ve Süreç Grupları", days: [
-                { day: "Pazartesi", title: "Proje Yöneticisi Kimdir?", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 3.1: Proje Yöneticisinin Etki Alanı, Bölüm 3.2: Proje Yöneticisi Yetkinlikleri." },
-                    { type: "Alınacak Notlar", content: "PMI Yetenek Üçgeni'ni (Talent Triangle) çizin. Teknik Proje Yönetimi, Liderlik, Stratejik ve İş Yönetimi başlıklarının altına hangi yetkinliklerin girdiğini 2-3 madde ile özetleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Modern proje yöneticisinin sadece plan yapıp takip eden değil, aynı zamanda stratejik düşünen bir lider olduğunu anlamak. 2) Proje yöneticisinin etki alanının sadece proje ekibiyle sınırlı olmadığını (organizasyon, endüstri, paydaşlar) kavramak." },
-                    { type: "Günün İpucu", content: "Yetenek Üçgeni'ni bir taburenin üç ayağı gibi düşünün. Biri eksik olursa tabure devrilir. Başarılı bir proje için üçü de gereklidir." },
-                    { type: "Tekrar Sorusu", content: "Kendi yetkinliklerimi düşündüğümde, Yetenek Üçgeni'nin hangi köşesinde daha güçlüyüm, hangisinde gelişime ihtiyacım var?" }
+            { week: 2, phase: 1, title: "PMI Prensipleri ve PMBOK 7'ye Giriş", days: [
+                { day: "Pazartesi", title: "Prensipler 1-6", tasks: [
+                    { type: "Okunacak Bölümler", content: "PMBOK7 - Proje Yönetimi Standardı, Bölüm 3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Introduction to PM Principles', 'The 12 Principles of project management', 'Stewardship', 'Team', 'Stakeholders', 'Value'. Toplam: ~48 dk." },
+                    { type: "Alınacak Notlar", content: "12 Prensibi listeleyin. İlk 6 prensibi (Sorumlu Liderlik, Ekip, Paydaşlar, Değer, Sistem Düşüncesi, Liderlik) birer cümleyle açıklayın." }
                 ]},
-                 { day: "Salı", title: "Liderlik vs. Yöneticilik", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 3.3: Bir Liderin Nitelikleri ve Becerileri." },
-                    { type: "Alınacak Notlar", content: "Bir tablo oluşturarak Liderlik ve Yöneticilik kavramlarını karşılaştırın. (Örn: Yönetici idare eder, Lider yenilik yapar; Yönetici sistemlere odaklanır, Lider insanlara odaklanır). Farklı liderlik tarzlarını (Hizmetkâr, Dönüşümcü, Karizmatik vb.) ve hangi durumlarda etkili olabileceklerini birer cümle ile not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Yöneticiliğin 'işleri doğru yapmak', liderliğin ise 'doğru işleri yapmak' olduğunu ayırt etmek. 2) En iyi liderlik tarzının duruma göre değiştiğini (durumsal liderlik) anlamak." },
-                    { type: "Günün İpucu", content: "'İnsanlar yöneticilerini terk eder, liderlerini takip eder.' Bu söz üzerinde düşünün." },
-                    { type: "Tekrar Sorusu", content: "Bugün öğrendiğim liderlik tarzlarından hangisi benim kişiliğime en uygun ve bunu yarın nasıl hatırlayacağım?" }
+                { day: "Salı", title: "Prensipler 7-12", tasks: [
+                    { type: "Okunacak Bölümler", content: "PMBOK7 - Proje Yönetimi Standardı, Bölüm 3 (tekrar)." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Systems Thinking', 'Leadership', 'Tailoring', 'Quality', 'Complexity', 'Risk', 'Adaptability and Resiliency', 'Change'. Toplam: ~49 dk." },
+                    { type: "Alınacak Notlar", content: "Kalan 6 prensibi (Uyarlama, Kalite, Karmaşıklık, Risk, Uyarlanabilirlik, Değişim) birer cümleyle açıklayın." }
                 ]},
-                { day: "Çarşamba", title: "Entegrasyon Sanatı", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 3.4: Entegrasyonun Gerçekleştirilmesi." },
-                    { type: "Alınacak Notlar", content: "'Entegrasyon Yönetimi' bir bilgi alanı değil, proje yöneticisinin temel sorumluluğudur. Proje yöneticisinin bir orkestra şefine benzetilmesini bir metafor olarak not alın. Entegrasyonun farklı seviyelerini (süreç, bilişsel, bağlam) özetleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje yönetiminin, birbirinden bağımsız bilgi alanlarını (kapsam, zaman, maliyet vb.) bir araya getirme ve dengeleme sanatı olduğunu kavramak. 2) Proje Başlatma Belgesi (Project Charter) ve Proje Yönetim Planı'nın temel entegrasyon araçları olduğunu anlamak." },
-                    { type: "Günün İpucu", content: "Bir yapboz düşünün. Her bir bilgi alanı (kapsam, risk, kalite) bir yapboz parçasıdır. Proje yöneticisi, bu parçaları birleştirerek büyük resmi ortaya çıkaran kişidir." },
-                    { type: "Tekrar Sorusu", content: "Projenin bir alanındaki (örn: maliyet) bir değişikliğin diğer alanları (örn: zaman, kapsam, risk) nasıl etkileyebileceğine dair bir örnek düşünebilir miyim?" }
+                { day: "Çarşamba", title: "Performans Alanları 1-3", tasks: [
+                    { type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.1, 2.2, 2.3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Project Performance Domains intro', 'Stakeholder Performance Domain', 'Team Performance Domain', 'Development Approach Life Cycle Performance Domain'. Toplam: ~48 dk." },
+                    { type: "Alınacak Notlar", content: "Paydaş, Ekip ve Geliştirme Yaklaşımı performans alanlarının amaçlarını özetleyin." }
                 ]},
-                { day: "Perşembe", title: "Projenin 5 Aşaması", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 4: Başlangıç Süreç Grubu, Bölüm 5: Planlama Süreç Grubu, Bölüm 6: Yürütme Süreç Grubu, Bölüm 7: İzleme ve Kontrol Süreç Grubu, Bölüm 8: Kapanış Süreç Grubu (Sadece genel bakış)." },
-                    { type: "Alınacak Notlar", content: "Bir akış şeması çizin: Başlangıç -> Planlama -> Yürütme -> İzleme & Kontrol -> Kapanış. Her bir sürecin temel amacını ve en önemli çıktısını (örn: Başlangıç -> Proje Başlatma Belgesi; Planlama -> Proje Yönetim Planı) oklarla gösterin. İzleme ve Kontrol grubunun diğer tüm gruplarla paralel ilerlediğini şemada vurgulayın." },
-                    { type: "Öğrenme Çıktısı", content: "1) 5 Süreç Grubunun bir projenin mantıksal akışını temsil ettiğini anlamak. 2) Planlamanın tek seferlik bir aktivite olmadığını, proje boyunca devam eden bir süreç (progressive elaboration) olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Bu 5 süreci bir yolculuğa benzetin: Başlangıç (Nereye gideceğime karar verdim), Planlama (Rotamı çizdim, ne kadar benzin gerektiğini hesapladım), Yürütme (Arabayı sürüyorum), İzleme & Kontrol (Haritayı kontrol ediyorum, benzin seviyesine bakıyorum), Kapanış (Vardım ve yolculuk günlüğünü dolduruyorum)." },
-                    { type: "Tekrar Sorusu", content: "Bir proje en çok hangi süreç grubunda zaman harcar? Peki ya maliyet? Bu grupların etkileşimini yarın nasıl hatırlayacağım?" }
+                { day: "Perşembe", title: "Performans Alanları 4-8", tasks: [
+                    { type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.4, 2.5, 2.6, 2.7, 2.8." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Planning performance domain', 'Work performance domain', 'Delivery Performance Domain', 'Measurement Performance Domain', 'Uncertainty Performance Domain'. Toplam: ~50 dk." },
+                    { type: "Alınacak Notlar", content: "Planlama, Proje Çalışması, Teslimat, Ölçüm ve Belirsizlik performans alanlarının amaçlarını özetleyin." }
                 ]},
-                { day: "Cuma", title: "İlk İki Hafta Tekrarı", tasks: [
-                    { type: "Okunacak Bölümler", content: "Bu hafta ve geçen hafta aldığınız tüm notlar." },
-                    { type: "Alınacak Notlar", content: "Zayıf hissettiğiniz veya unuttuğunuzu fark ettiğiniz kavramları (örn: Matris Organizasyon, ÇİF/OSV farkı) ayrı bir 'Tekrar Listesi' sayfasına yazın." },
-                    { type: "Öğrenme Çıktısı", content: "1) İlk iki haftanın temel kavramları arasındaki bağlantıları kurmak. 2) Kendi öğrenme sürecinizdeki güçlü ve zayıf yönleri tespit etmek." },
-                    { type: "Günün İpucu", content: "Bir arkadaşınıza veya aile üyenize 5 dakika içinde 'proje nedir ve nasıl yönetilir' konusunu basitçe anlatmaya çalışın. Başkasına anlatmak, en iyi öğrenme yöntemlerinden biridir." },
-                    { type: "Tekrar Sorusu", content: "İlk iki haftadan sonra, PMP çalışmasıyla ilgili beni en çok ne şaşırttı ve bu bilgiyi nasıl kalıcı hale getirebilirim?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'PMI Code of Ethics and Professional Conduct', 'Truth', 'Laws', 'Gifts and Donations', 'Permission', 'PMI'. Toplam: ~20 dk." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Integration Quiz'ini çözün." },
+                    { type: "Alınacak Notlar", content: "PMI Etik Kurallarının dört temel değerini (Sorumluluk, Saygı, Adalet, Dürüstlük) yazın." }
                 ]}
             ]},
-            { week: 3, phase: 1, title: "Temel Planlama Bilgi Alanları", days: [
-                { day: "Pazartesi", title: "Kapsam Yönetimi", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.2: Kapsam Yönetiminin Planlanması, 5.3: Gereksinimlerin Toplanması, 5.4: Kapsamın Tanımlanması, 5.5: İKY'nin Oluşturulması." },
-                    { type: "Alınacak Notlar", content: "Ürün kapsamı ve Proje kapsamı arasındaki farkı yazın. İş Kırılım Yapısı (İKY/WBS) ve İKY Sözlüğü'nün önemini birer cümleyle özetleyin. Kapsam Sürüncemesi (Scope Creep) kavramını ve nasıl önlenebileceğini not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Projenin sınırlarını net bir şekilde çizen Kapsam Temel Çizgisini (Scope Baseline) oluşturan 3 belgenin (Kapsam Bildirimi, İKY, İKY Sözlüğü) ne olduğunu bilmek. 2) İKY'nin projenin temel planlama aracı olduğunu anlamak." },
-                    { type: "Günün İpucu", content: "İKY'yi bir ağacın kökleri ve dalları gibi düşünün. Proje en tepedeki gövde, ana teslimatlar kalın dallar, iş paketleri ise en uçtaki yapraklardır." },
-                    { type: "Tekrar Sorusu", content: "Bir müşterim projeye küçük bir ekleme yapmak istediğinde, bu değişikliği yönetmek için ilk başvuracağım belge hangisidir?" }
+            { week: 3, phase: 1, title: "Geleneksel Planlama - Kapsam, Zaman, Maliyet", days: [
+                { day: "Pazartesi", title: "Entegrasyon ve Kapsam Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 4.1, 4.2, 5.1, 5.2." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Develop Project Charter', 'Develop Project Management Plan', 'Plan Scope Management', 'Collect Requirements'. Toplam: ~52 dk." },
+                    { type: "Alınacak Notlar", content: "Proje Başlatma Belgesi ve Proje Yönetim Planı'nın ana bileşenlerini yazın. Gereksinim toplama tekniklerini listeleyin." }
                 ]},
-                 { day: "Salı", title: "Zaman Yönetimi - Aktiviteler", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.6: Zaman Çizelgesi Yönetiminin Planlanması, 5.7: Aktivitelerin Tanımlanması, 5.8: Aktivitelerin Sıralanması." },
-                    { type: "Alınacak Notlar", content: "İKY'deki 'iş paketlerinin' nasıl 'aktivitelere' bölündüğünü bir akış şemasıyla gösterin. Bağımlılık türlerini (FS, SS, FF, SF) ve Öncül Diyagram Metodu'nu (PDM) örneklerle açıklayın." },
-                    { type: "Öğrenme Çıktısı", content: "1) İş paketleri ve aktiviteler arasındaki farkı anlamak. 2) Proje aktiviteleri arasındaki mantıksal ilişkileri kurabilmek." },
-                    { type: "Günün İpucu", content: "Bağımlılıkları ezberlemek yerine mantığını anlayın. 'Duvarı boyamadan önce (öncül), duvarın kuruması (ardıl) gerekir.' Bu bir Bitiş-Başlangıç (FS) ilişkisidir." },
-                    { type: "Tekrar Sorusu", content: "Bir projedeki iki aktivite aynı anda başlamak zorundaysa, bu ne tür bir bağımlılıktır?" }
+                { day: "Salı", title: "Kapsam Tanımlama ve Zaman Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.3, 5.4, 6.1, 6.2, 6.3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Define Scope', 'Create WBS', 'Plan Schedule Management', 'Define Activities', 'Sequence Activities'. Toplam: ~45 dk." },
+                    { type: "Alınacak Notlar", content: "İKY ve İKY Sözlüğü nedir? Bağımlılık türlerini (FS, SS, FF, SF) örneklerle açıklayın." }
                 ]},
-                { day: "Çarşamba", title: "Zaman Yönetimi - Süre & Çizelge", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.9: Aktivite Sürelerinin Tahmin Edilmesi, 5.10: Zaman Çizelgesinin Geliştirilmesi." },
-                    { type: "Alınacak Notlar", content: "Tahminleme tekniklerini (Analog, Parametrik, Üç Nokta/PERT) bir tablo ile karşılaştırın. Kritik Yol (Critical Path) kavramını, bolluk (float/slack) türlerini (toplam, serbest) ve nasıl hesaplandığını basit bir örnekle not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Projenin en erken ne zaman bitebileceğini gösteren Kritik Yolu belirleyebilmek. 2) Bolluk kavramının, hangi aktivitelerin geciktirilebileceğini anlamak için neden önemli olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Kritik Yol, projenin 'omurgasıdır'. Bu yoldaki herhangi bir gecikme, projenin bitiş tarihini doğrudan etkiler." },
-                    { type: "Tekrar Sorusu", content: "Bolluğu sıfır olan bir aktivite ne anlama gelir? Bu aktivite hangi yol üzerindedir?" }
+                { day: "Çarşamba", title: "Kritik Yol Metodu (CPM)", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 6.4, 6.5." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Estimate Activity Durations', 'PERT Formula', 'Develop Schedule', 'Critical Path Method Intro', 'Critical Path Method', 'Calculate Critical Path', 'Calculate float or slack'. Toplam: ~51 dk." },
+                    { type: "Alınacak Notlar", content: "Üç Nokta Tahmin (PERT) formülünü yazın. Kritik Yol ve Bolluk (Float/Slack) kavramlarını tanımlayın." }
                 ]},
-                { day: "Perşembe", title: "Maliyet Yönetimi", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.11: Maliyet Yönetiminin Planlanması, 5.12: Maliyetlerin Tahmin Edilmesi, 5.13: Bütçenin Belirlenmesi." },
-                    { type: "Alınacak Notlar", content: "Maliyet tahminleme tekniklerini (zaman tahminleme ile benzer) özetleyin. Maliyet Temel Çizgisi'nin (Cost Baseline) nasıl oluştuğunu ve bütçenin hangi bileşenlerden (Maliyet Temel Çizgisi + Yönetim Rezervleri) meydana geldiğini bir şema ile gösterin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Olasılık rezervi (bilinen riskler için) ve yönetim rezervi (bilinmeyen riskler için) arasındaki farkı anlamak. 2) Maliyet Temel Çizgisi'nin, projenin maliyet performansını ölçmek için kullanılan referans noktası olduğunu bilmek." },
-                    { type: "Günün İpucu", content: "Bütçeyi bir matruşka bebek gibi düşünün. En içte aktivite maliyetleri, bir dışta kontrol hesapları, onun dışında Maliyet Temel Çizgisi ve en dışta toplam bütçe vardır." },
-                    { type: "Tekrar Sorusu", content: "Projede öngörülmemiş bir risk ortaya çıktığında, bu riskin maliyetini karşılamak için hangi rezerv kullanılır?" }
+                { day: "Perşembe", title: "CPM Pratiği ve Maliyet Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 7.1, 7.2, 7.3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Forward Pass', 'Backward Pass', 'Free Float', 'CPM Practice 1 & 2', 'Plan Cost Management', 'Estimate Cost', 'Determine Budget'. Toplam: ~58 dk." },
+                    { type: "Alınacak Notlar", content: "İleri ve geri geçiş hesaplamalarını bir örnek üzerinde deneyin. Maliyet Temel Çizgisi ve Proje Bütçesi'nin bileşenlerini çizin." }
                 ]},
-                { day: "Cuma", title: "Üçlü Kısıt Tekrarı", tasks: [
-                    { type: "Okunacak Bölümler", content: "Bu hafta öğrendiğiniz Kapsam, Zaman ve Maliyet notlarınız." },
-                    { type: "Alınacak Notlar", content: "Bir üçgen çizin ve köşelerine Kapsam, Zaman, Maliyet yazın. Ortasına Kalite yazın. Bir köşedeki değişikliğin diğerlerini nasıl etkilediğine dair senaryolar yazın. (Örn: Kapsam artarsa, zaman ve maliyet de artar)." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje yönetiminin temel dengeleme sanatı olan 'Üçlü Kısıt' (Triple Constraint) kavramını içselleştirmek. 2) Bu üç kısıtın birbiriyle olan dinamik ilişkisini anlamak." },
-                    { type: "Günün İpucu", content: "'İyi, Hızlı, Ucuz: İkisini seç.' Bu popüler söz, Üçlü Kısıt'ın en basit özetidir." },
-                    { type: "Tekrar Sorusu", content: "Müşteri projenin daha hızlı bitmesini isterse, bir proje yöneticisi olarak ona hangi seçenekleri (örn: kapsamı azaltmak veya maliyeti artırmak) sunmalıyım?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'CPM Practice 2 Answer' videosunu izleyerek pratiğinizi kontrol edin." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Scope Management Quiz', 'Schedule Management Quiz' ve 'Cost Management Quiz'lerini çözün." },
+                    { type: "Alınacak Notlar", content: "Kapsam, Zaman ve Maliyet temel çizgilerinin ne anlama geldiğini ve ne içerdiğini özetleyin." }
                 ]}
             ]},
-            { week: 4, phase: 1, title: "Destekleyici Planlama ve PMBOK 7'ye Geçiş", days: [
-                { day: "Pazartesi", title: "Kalite ve Kaynak Yönetimi", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.14: Kalite Yönetiminin Planlanması, 5.15: Kaynak Yönetiminin Planlanması, 5.16: Aktivite Kaynaklarının Tahmin Edilmesi." },
-                    { type: "Alınacak Notlar", content: "Kalite Maliyeti (Cost of Quality) kavramını (uygunluk ve uygunsuzluk maliyetleri) bir şema ile açıklayın. Kaynak Yönetim Planı'nın ana başlıklarını (roller, sorumluluklar, organizasyon şeması) listeleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Kalitenin denetlenerek değil, planlanarak sağlandığını anlamak. 2) Proje için doğru insanları ve malzemeleri doğru zamanda temin etmenin önemini kavramak." },
-                    { type: "Günün İpucu", content: "'Önlemek, düzeltmekten her zaman daha ucuzdur.' Bu, Kalite Yönetimi'nin temel felsefesidir." },
-                    { type: "Tekrar Sorusu", content: "Çalışanlara verilen bir eğitim, uygunluk maliyeti midir yoksa uygunsuzluk maliyeti mi?" }
+            { week: 4, phase: 1, title: "Geleneksel Planlama - Destekleyici Alanlar", days: [
+                { day: "Pazartesi", title: "Kalite ve Kaynak Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 8.1, 9.1, 9.2." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Plan Quality Management', 'Plan Resources Management', 'Estimate Activity Resources'. Toplam: ~28 dk." },
+                    { type: "Alınacak Notlar", content: "Kalite Maliyeti (Uygunluk/Uygunsuzluk) kavramını açıklayın. RAM/RACI şeması nedir?" }
                 ]},
-                { day: "Salı", title: "İletişim ve Risk Yönetimi", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.17: İletişim Yönetiminin Planlanması, 5.18: Risk Yönetiminin Planlanması, 5.19: Risklerin Tanımlanması." },
-                    { type: "Alınacak Notlar", content: "İletişim Yönetim Planı'nın 4R'sini (Doğru bilgi, Doğru kişiye, Doğru zamanda, Doğru formatta) not alın. Risk Kayıt Belgesi'nin (Risk Register) ne olduğunu ve hangi bilgileri içerdiğini özetleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje yöneticisinin zamanının %90'ını iletişimle geçirdiğini ve bu yüzden planlı iletişimin kritik olduğunu anlamak. 2) Risk yönetiminin sadece tehditlere değil, fırsatlara da odaklandığını kavramak." },
-                    { type: "Günün İpucu", content: "İletişim, projenin 'kan dolaşımıdır'. Eğer durursa, proje ölür." },
-                    { type: "Tekrar Sorusu", content: "Proje durum toplantısı bir risk tanımlama aracı olabilir mi? Nasıl?" }
+                { day: "Salı", title: "İletişim ve Risk Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 10.1, 11.1, 11.2, 11.3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Plan Communication Management', 'Plan Risk Management', 'Identify Risks', 'Perform Qualitative Risk Analysis'. Toplam: ~35 dk." },
+                    { type: "Alınacak Notlar", content: "İletişim Yönetim Planı'nın ana unsurlarını yazın. Olasılık ve Etki Matrisi'ni çizin." }
                 ]},
-                { day: "Çarşamba", title: "Tedarik ve Paydaş Yönetimi", tasks: [
-                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 5.23: Tedarik Yönetiminin Planlanması, 5.24: Paydaş Katılımının Planlanması." },
-                    { type: "Alınacak Notlar", content: "Farklı sözleşme türlerini (Sabit Fiyatlı, Maliyet Artı, Zaman ve Malzeme) bir tablo ile karşılaştırın. Paydaş Analizi matrisini (Güç/İlgi) çizin ve her bir kare için hangi stratejinin (Yönet, Memnun Et, Bilgilendir, İzle) uygulanacağını yazın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje için doğru sözleşme türünü seçmenin riskleri nasıl etkilediğini anlamak. 2) Tüm paydaşların aynı şekilde yönetilmeyeceğini, etkilerine ve ilgilerine göre farklı stratejiler geliştirilmesi gerektiğini kavramak." },
-                    { type: "Günün İpucu", content: "Sabit fiyatlı sözleşmelerde risk satıcıda, maliyet artı sözleşmelerde risk alıcıdadır." },
-                    { type: "Tekrar Sorusu", content: "Projenin en önemli sponsoru, Güç/İlgi matrisinin hangi karesinde yer almalıdır?" }
+                { day: "Çarşamba", title: "Risk ve Tedarik Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 11.4, 11.5, 12.1." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Preform Quantitative Risk Analysis', 'Plan Risk Response', 'Plan Procurement Management'. Toplam: ~34 dk." },
+                    { type: "Alınacak Notlar", content: "Risk yanıt stratejilerini (Tehdit/Fırsat) listeleyin. Sözleşme türlerini (Sabit Fiyatlı, Maliyet Artı, T&M) karşılaştırın." }
                 ]},
-                { day: "Perşembe", title: "Yeni Felsefe - PMBOK 7 Prensipleri", tasks: [
-                    { type: "Okunacak Bölümler", content: "Proje Yönetimi Bilgi Birikimi Kılavuzu (PMBOK7) - Proje Yönetimi Standardı, Bölüm 1: Giriş ve Bölüm 3: Proje Yönetim Prensipleri." },
-                    { type: "Alınacak Notlar", content: "Süreç bazlı yaklaşımdan prensip bazlı yaklaşıma geçişin nedenlerini özetleyin. 12 Prensibi listeleyin ve her birini tek bir anahtar kelime ile (örn: Sorumlu Liderlik -> Sahiplenme, Değer -> Amaç) ilişkilendirin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Modern proje yönetiminin 'ne yapılacağını' söylemekten çok 'nasıl düşünülmesi gerektiğini' vurguladığını anlamak. 2) Bu 12 prensibin, proje yöneticisinin karar verme mekanizmasının temelini oluşturduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Bu prensipleri bir proje yöneticisinin 'yemini' gibi düşünün. Her kararınızda bu ilkelere sadık kalmalısınız." },
-                    { type: "Tekrar Sorusu", content: "Bugün öğrendiğim prensiplerden hangisi, geçen haftalarda öğrendiğim klasik proje yönetimi anlayışıyla en çok örtüşüyor/çelişiyor?" }
+                { day: "Perşembe", title: "Paydaş Planlama ve Genel Kavramlar", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 13.1, 13.2." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Plan Stakeholder Engagement', 'Expert Judgement', 'Data Gathering...', 'Interpersonal and Team Skills', 'Project Documents', 'PMIS', 'Work Performance Data, Info and report', 'Updates'. Toplam: ~44 dk." },
+                    { type: "Alınacak Notlar", content: "Paydaş Katılım Matrisi'ni çizin. WPD, WPI, WPR arasındaki farkı not alın." }
                 ]},
-                { day: "Cuma", title: "Değer Teslim Sistemi", tasks: [
-                    { type: "Okunacak Bölümler", content: "PMBOK7 - Proje Yönetimi Standardı, Bölüm 2: Değer Teslim Sistemi." },
-                    { type: "Alınacak Notlar", content: "Değer teslim sistemi bileşenlerini (portföyler, programlar, projeler, operasyonlar) ve aralarındaki bilgi akışını gösteren bir şema çizin. 'Değer' kavramının sadece finansal getiri olmadığını, paydaş memnuniyeti ve sosyal fayda gibi unsurları da içerdiğini not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Projelerin, bir organizasyonun stratejik hedeflerine ulaşmak için değer yaratan bir sistemin parçası olduğunu anlamak. 2) Yönetişimin (governance), bu sistemin doğru çalışmasını sağlayan kurallar bütünü olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Değer Teslim Sistemi'ni bir ekosisteme benzetin. Her bir parça (proje, program vb.) hayatta kalmak ve büyümek için birbiriyle etkileşim halindedir." },
-                    { type: "Tekrar Sorusu", content: "Bir projenin başarıyla tamamlanması, her zaman 'değer' yarattığı anlamına gelir mi? Neden?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'End of Planning' videosunu izleyerek planlama fazını özetleyin." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Quality Quiz', 'Resource Management Questions', 'Communications Management Questions', 'Risk Management Quiz', 'Procurement Management Quiz', 'Stakeholders Management Quiz' quizlerini çözün." },
+                    { type: "Alınacak Notlar", content: "Tüm planlama süreçlerinin ana çıktılarını bir tablo halinde özetleyin." }
                 ]}
             ]},
-            { week: 5, phase: 2, title: "Çevik Felsefesi ve Zihniyeti", days: [
-                { day: "Pazartesi", title: "Çevik Manifesto", tasks: [
-                    { type: "Okunacak Bölümler", content: "Çevik Uygulama Kılavuzu (ÇUK) - Bölüm 1: Giriş, Bölüm 2.1: Tanımlanabilir Çalışma ve Yüksek Belirsizliğe Sahip Çalışma, Bölüm 2.2: Çevik Manifesto ve Zihniyeti." },
-                    { type: "Alınacak Notlar", content: "Çevik Manifesto'nun 4 temel değerini bir T-şeması ile yazın (sol taraf > sağ taraf). Her değerin 'sağ taraf önemsizdir' demek olmadığını, sadece 'sol tarafın daha değerli olduğunu' vurguladığını not alın. 12 ilkeyi okuyun ve en önemli bulduğunuz 3 tanesini kendi cümlelerinizle özetleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Çevikliğin bir metodoloji değil, bir 'zihniyet' (mindset) olduğunu anlamak. 2) Çevikliğin, belirsizliğin yüksek olduğu ortamlarda değişime kucak açarak değer yaratmayı hedeflediğini kavramak." },
-                    { type: "Günün İpucu", content: "Manifesto'yu ezberlemek yerine ruhunu anlamaya çalışın: İnsanlar ve etkileşim, süreçlerden ve araçlardan daha önemlidir." },
-                    { type: "Tekrar Sorusu", content: "Çevik Manifesto'nun hangi değeri, geleneksel proje yönetimindeki kapsamlı dokümantasyon anlayışına bir tepki olarak doğmuştur?" }
+            // FAZ 2: Çevik ve Hibrit Yaklaşımlar (Hafta 5-8)
+            { week: 5, phase: 2, title: "Çevik Felsefesi ve Metotlar", days: [
+                { day: "Pazartesi", title: "Çevikliğe Giriş ve Manifesto", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 1, 2." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'What is agile', 'Agile vs. Traditional PM', 'Agile Benefits', 'Inverting the triangle', 'Agile Manifesto' ve 4 değer videosu. Toplam: ~30 dk." },
+                    { type: "Alınacak Notlar", content: "Çevik Manifesto'nun 4 değerini ve 12 ilkesini yazın. Geleneksel ve Çevik projeler arasındaki temel farkları listeleyin." }
                 ]},
-                { day: "Salı", title: "Yalın ve Kanban", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 2.3: Yalın ve Kanban Metodu, Bölüm 2.4: Belirsizlik, Risk ve Yaşam Döngüsü Seçimi." },
-                    { type: "Alınacak Notlar", content: "Yalın düşüncenin 7 israfını (örn: bekleme, fazla üretim, hatalar) listeleyin. Kanban'ın 3 temel prensibini (Görselleştir, Akışı Sınırla, Akışı Yönet) yazın. Bir Kanban tahtası örneği çizin (Yapılacak, Yapılıyor, Bitti)." },
-                    { type: "Öğrenme Çıktısı", content: "1) Kanban'ın, mevcut süreci bozmadan iş akışını iyileştirmeye odaklanan bir metot olduğunu anlamak. 2) 'Devam Eden İşleri Sınırla' (Limit WIP) ilkesinin, verimliliği artırmanın ve darboğazları ortaya çıkarmanın anahtarı olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Kanban, bir otoyol gibidir. Eğer otoyola aynı anda çok fazla araba sokarsanız (WIP sınırı yok), trafik kilitlenir. WIP sınırı, trafiğin akmasını sağlar." },
-                    { type: "Tekrar Sorusu", content: "Scrum ve Kanban arasındaki en temel fark nedir? (İpucu: Roller, zaman kutuları)" }
+                { day: "Salı", title: "Scrum ve XP", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Scrum ve XP ile ilgili bölümler." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Agile Guiding Principles', 'Agile Methods', 'Agile Process', 'Scrum', 'Scrum Activities', 'Scrum Artifacts', 'Extreme Programming', 'XP Roles', 'XP Practices'. Toplam: ~79 dk." },
+                    { type: "Alınacak Notlar", content: "Scrum'ın 3 rolünü, 5 seremonisini ve 3 artefaktını bir şema ile gösterin. XP'nin temel uygulamalarını (örn: Eşli Programlama) not alın." }
                 ]},
-                { day: "Çarşamba", title: "Çevik Yaşam Döngüleri", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 3.1: Proje Yaşam Döngüsünün Özellikleri." },
-                    { type: "Alınacak Notlar", content: "Yinelemeli (Iterative) ve Artırımlı (Incremental) çevik yaklaşımlar arasındaki farkı bir şema ile gösterin. (Yinelemeli: Geri bildirimle ürünü iyileştirme. Artırımlı: Kullanılabilir parçalar ekleyerek ürünü büyütme). Çevikliğin bu ikisini birleştirdiğini not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Çevik projelerin, küçük ve kullanılabilir ürün parçalarını sık aralıklarla teslim ederek değer yarattığını anlamak. 2) Geleneksel (Öngörücü) ve Çevik yaşam döngüleri arasındaki temel farkın, 'değişime verilen yanıt' olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Bir ressamı düşünün. Önce tüm tabloyu kabaca çizer (yinelemeli), sonra her gün bir bölümünü detaylandırarak bitirir (artırımlı). Çeviklik bu ikisinin birleşimidir." },
-                    { type: "Tekrar Sorusu", content: "Bir proje hem yinelemeli hem de artırımlı olabilir mi? Örnek verin." }
+                { day: "Çarşamba", title: "Yalın, Kanban ve Diğer Metotlar", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Kanban ile ilgili bölümler." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Basic Terminology review', 'Lean Development', 'Kanban Development', 'Limit WIP', 'Cumulative Flow Diagrams', 'Other agile methods', 'Agile declaration of Interdependence'. Toplam: ~33 dk." },
+                    { type: "Alınacak Notlar", content: "Kanban tahtası örneği çizin. WIP (Work in Progress) limitinin önemini açıklayın. Yalın'ın 7 israfını listeleyin." }
                 ]},
                 { day: "Perşembe", title: "Hibrit Yaklaşımlar", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 3.1.6'dan 3.1.11'e kadar (Hibrit Yaşam Döngülerinin Özellikleri)." },
-                    { type: "Alınacak Notlar", content: "Hibrit yaklaşımın ne zaman mantıklı olduğunu (örn: projenin bazı kısımları belirli, bazıları belirsiz olduğunda) yazın. 'Ağırlıklı olarak öngörücü ama bazı çevik bileşenlere sahip' bir proje örneği düşünün." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje yönetiminde 'tek beden herkese uymaz' ilkesini anlamak. 2) Hibrit modellerin, farklı yaklaşımların en iyi yönlerini bir araya getirerek projeye özel çözümler ürettiğini kavramak." },
-                    { type: "Günün İpucu", content: "Hibrit yaklaşım, bir salata barı gibidir. Projenizin ihtiyacına göre farklı malzemeleri (yaklaşımları) bir araya getirirsiniz." },
-                    { type: "Tekrar Sorusu", content: "Donanım (hardware) ve yazılım (software) geliştirmeyi içeren bir projede hibrit yaklaşım nasıl kullanılabilir?" }
+                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Hybrid Introduction', 'Definable vs. Uncertainty', 'Four Life Cycles', 'Hybrid Method 1', 'Hybrid Method 2', 'Hybrid Method 3', 'Hybrid method 4', 'Hybrid Fit for purpose'. Toplam: ~47 dk." },
+                    { type: "Alınacak Notlar", content: "Hangi durumlarda hibrit yaklaşımın uygun olduğunu yazın. Farklı hibrit modelleri özetleyin." }
                 ]},
-                { day: "Cuma", title: "Yaklaşımları Harmanlamak", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 3.2: Çevik Yaklaşımları Harmanlamak, Bölüm 3.3: Uyarlamayı Etkileyen Proje Faktörleri." },
-                    { type: "Alınacak Notlar", content: "Bir proje için doğru yaklaşımı seçmeyi etkileyen faktörleri (ekip kültürü, paydaş katılımı, proje büyüklüğü, belirsizlik vb.) bir zihin haritası şeklinde çizin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje yaklaşımı seçiminin, sadece teknik bir karar değil, aynı zamanda kültürel ve organizasyonel bir karar olduğunu anlamak. 2) Uyarlamanın (tailoring) önemini ve nasıl yapılması gerektiğini kavramak." },
-                    { type: "Günün İpucu", content: "Doğru yaklaşımı seçmek, bir yolculuk için doğru aracı seçmeye benzer. Kısa bir şehir içi yolculuk için bisiklet, uzun bir otoyol yolculuğu için araba daha uygundur." },
-                    { type: "Tekrar Sorusu", content: "Paydaşlar sürekli fikir değiştiriyorsa, bu durum hangi proje yaklaşımını seçmemiz için güçlü bir göstergedir?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Agile mindset' videosunu izleyerek çevik zihniyeti pekiştirin." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Agile Quiz'ini (20 soru) çözün." },
+                    { type: "Alınacak Notlar", content: "Scrum, Kanban ve XP arasındaki temel farkları bir tablo ile karşılaştırın." }
                 ]}
             ]},
-            { week: 6, phase: 2, title: "Çevik Bir Ortamda Çalışmak", days: [
-                { day: "Pazartesi", title: "Hizmetkâr Liderlik", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 4.1: Çevik bir Zihniyet ile Başlamak, Bölüm 4.2: Hizmetkâr Liderlik Ekibi Güçlendirir." },
-                    { type: "Alınacak Notlar", content: "Geleneksel (Komuta-Kontrol) lider ile Hizmetkâr Lider arasındaki farkları bir tablo ile karşılaştırın. Hizmetkâr liderin temel sorumluluklarını (Engelleri kaldırmak, Ekibi korumak, İletişimi kolaylaştırmak vb.) listeleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Hizmetkâr liderin amacının 'insanları yönetmek' değil, 'insanların kendi kendilerini yönetebilecekleri bir ortam yaratmak' olduğunu anlamak. 2) Çevik bir ortamda proje yöneticisinin rolünün bir 'kolaylaştırıcıya' dönüştüğünü kavramak." },
-                    { type: "Günün İpucu", content: "Hizmetkâr lider, bir bahçıvan gibidir. Bitkilerin nasıl büyüyeceğini söylemez, sadece büyümeleri için en iyi ortamı (güneş, su, toprak) sağlar." },
-                    { type: "Tekrar Sorusu", content: "Bir ekip üyesi bir sorunla karşılaştığında, hizmetkâr bir liderin ilk tepkisi ne olmalıdır: 'Çözümü bu' mu, yoksa 'Çözmen için sana nasıl yardımcı olabilirim' mi?" }
+            { week: 6, phase: 2, title: "Çevik Ortamda Değer Yaratma", days: [
+                { day: "Pazartesi", title: "Değer Odaklı Teslimat", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Değer ve MVP ile ilgili bölümler." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Leading Effectively', 'Value-Driven Delivery', 'Early Value Delivery', 'Reduce Waste', 'Minimal Viable Product', 'Delivering Value Incrementally'. Toplam: ~29 dk." },
+                    { type: "Alınacak Notlar", content: "MVP (Minimum Viable Product) nedir? Değer odaklı teslimatın prensiplerini yazın." }
                 ]},
-                { day: "Salı", title: "Çevik Ekipler ve Roller", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 4.3: Ekip Oluşumu." },
-                    { type: "Alınacak Notlar", content: "Çevik rollerin (Ürün Sahibi, Scrum Master, Geliştirme Ekibi) sorumluluklarını birer cümle ile özetleyin. 'Uzmanların Genelleştirilmesi' (T-şekilli insanlar) kavramını açıklayın. Adanmış (dedicated) ekiplerin önemini not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Çevik ekiplerin kendi kendini organize eden (self-organizing) ve çapraz fonksiyonlu (cross-functional) olduğunu anlamak. 2) Ürün Sahibi'nin 'Ne' yapılacağına, Geliştirme Ekibi'nin 'Nasıl' yapılacağına, Scrum Master'ın ise sürecin 'Doğru' işlemesine odaklandığını bilmek." },
-                    { type: "Günün İpucu", content: "Çevik bir ekip, bir caz grubu gibidir. Herkes kendi enstrümanında uzmandır ama aynı zamanda birbirlerini dinler ve uyum içinde doğaçlama yaparlar." },
-                    { type: "Tekrar Sorusu", content: "Bir projede hem proje yöneticisi hem de Scrum Master aynı anda olabilir mi? Bu rollerin farkı nedir?" }
+                { day: "Salı", title: "Değeri Ölçme ve Önceliklendirme", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Önceliklendirme teknikleri." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Assessing Value - Financial metrics', 'Key Performance Indicators', 'How Customers Conduct Value Prioritization', 'Different Prioritization Techniques', 'Kano Analysis'. Toplam: ~19 dk." },
+                    { type: "Alınacak Notlar", content: "MoSCoW, Kano Modeli gibi önceliklendirme tekniklerini özetleyin. NPV, ROI gibi finansal metrikleri hatırlayın." }
                 ]},
-                { day: "Çarşamba", title: "Çevik Seremoniler (Toplantılar)", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 5.2.1: Retrospektifler, 5.2.2: İş Listesi Hazırlama, 5.2.3: İş Listesini İyileştirme, 5.2.4: Günlük Toplantılar." },
-                    { type: "Alınacak Notlar", content: "Çevik seremonileri (Sprint Planlama, Günlük Scrum, Sprint Değerlendirme, Sprint Retrospektifi) bir tablo ile özetleyin. Her biri için 'Amaç', 'Katılımcılar' ve 'Süre' sütunları oluşturun." },
-                    { type: "Öğrenme Çıktısı", content: "1) Her bir çevik toplantının net bir amacı olduğunu ve zaman kutulu (time-boxed) olduğunu anlamak. 2) Retrospektifin, ekibin sürekli iyileşmesini (Kaizen) sağlayan en önemli seremoni olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Günlük Scrum'ın 3 sorusunu not alın: 'Dün ne yaptım?', 'Bugün ne yapacağım?', 'Herhangi bir engelim var mı?'. Bu bir durum raporu değil, bir koordinasyon ve taahhüt toplantısıdır." },
-                    { type: "Tekrar Sorusu", content: "Sprint Değerlendirme (Sprint Review) ve Sprint Retrospektifi arasındaki temel fark nedir? Biri ürüne, diğeri sürece odaklanır." }
+                { day: "Çarşamba", title: "Çevik Sözleşmeler ve Uyum", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Çevik Sözleşmeler." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Accounting on agile projects', 'Regulatory Compliance', 'Risk Management' (Agile), 'Agile Contracting', 'Verifying and Validating'. Toplam: ~21 dk." },
+                    { type: "Alınacak Notlar", content: "Çevik projeler için uygun sözleşme türlerini (örn: Aşamalı Finansman) not alın." }
                 ]},
-                { day: "Perşembe", title: "Çevik Artefaktlar (Eserler)", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 5.2.5: Gösterimler/Gözden Geçirmeler, 5.2.6: Yineleme Tabanlı Çevik için Planlama, 5.2.7: Yürütme Uygulamaları, 5.2.8: Yinelemeler ve Artırımlar." },
-                    { type: "Alınacak Notlar", content: "Çevik artefaktları (Ürün İş Listesi, Sprint İş Listesi, Potansiyel Olarak Teslim Edilebilir Ürün Parçası) ve aralarındaki ilişkiyi bir şema ile gösterin. 'Bitti Tanımı'nın (Definition of Done) neden önemli olduğunu açıklayın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Ürün İş Listesi'nin (Product Backlog) yaşayan bir belge olduğunu ve sürekli güncellendiğini anlamak. 2) 'Bitti Tanımı'nın, ekibin kalite konusunda ortak bir anlayışa sahip olmasını sağladığını kavramak." },
-                    { type: "Günün İpucu", content: "Ürün İş Listesi bir 'istek listesi', Sprint İş Listesi ise o sprint için bir 'yapılacaklar listesidir'." },
-                    { type: "Tekrar Sorusu", content: "Bir kullanıcı hikayesi (user story) 'bitti' olarak işaretlenmeden önce hangi kritere uymalıdır?" }
+                { day: "Perşembe", title: "Çevik Takım ve Liderlik", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 4." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'People Over Processes', 'Development Team roles', 'Building Agile teams', 'Safe place', 'Models of team development', 'Tuckman Five stages of team development', 'Training, coaching, and mentoring', 'Team Spaces'. Toplam: ~40 dk." },
+                    { type: "Alınacak Notlar", content: "Hizmetkâr Liderin özelliklerini yazın. Tuckman'ın ekip gelişim aşamalarını (Forming, Storming, Norming, Performing) çizin." }
                 ]},
-                { day: "Cuma", title: "Çevik Sorunları Giderme", tasks: [
-                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 5.3: Çevik Proje Sorunlarını Giderme." },
-                    { type: "Alınacak Notlar", content: "Sık karşılaşılan çevik proje sorunlarını (örn: iş listesinin net olmaması, paydaş katılımının düşük olması, ekibin sürekli bölünmesi) ve olası çözüm önerilerini listeleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Çevik yaklaşımların 'sihirli bir değnek' olmadığını ve kendi zorlukları olduğunu anlamak. 2) Sorunların çözümünde şeffaflık, denetim ve uyarlama (transparency, inspection, adaptation) döngüsünün nasıl kullanılacağını kavramak." },
-                    { type: "Günün İpucu", content: "Bir sorunla karşılaştığınızda, kök neden analizi yapmak için '5 Neden' tekniğini kullanın. (Örn: Teslimat gecikti. Neden? Testler uzun sürdü. Neden?...)" },
-                    { type: "Tekrar Sorusu", content: "Günlük toplantılar çok uzun sürüyorsa, bir Scrum Master olarak ilk yapmam gereken şey ne olmalıdır?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Tools for Agile Projects' videosunu izleyin." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Building High-Performance Teams' bölümünün sonundaki 'Quiz'i (20 soru) çözün." },
+                    { type: "Alınacak Notlar", content: "Yüksek performanslı bir çevik ekibin 5 özelliğini yazın." }
                 ]}
             ]},
-            { week: 7, phase: 2, title: "PMBOK 7 Entegrasyonu - Paydaş & Ekip", days: [
-                { day: "Pazartesi", title: "Paydaş Performans Alanı", tasks: [
-                    { type: "Okunacak Bölümler", content: "PMBOK7 - Proje Yönetimi Bilgi Birikimi Kılavuzu, Bölüm 2.1: Paydaş Performans Alanı." },
-                    { type: "Alınacak Notlar", content: "Geleneksel ve Çevik yaklaşımlarda paydaş katılımının nasıl farklılaştığını bir VENN şeması ile gösterin. Ortak noktaları (örn: paydaşları belirleme) ve farklılıkları (örn: çevikte sürekli ve yakın iş birliği) belirtin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje başarısının, paydaşlarla etkili bir şekilde ilgilenmeye ve ilişkileri yönetmeye bağlı olduğunu anlamak. 2) Paydaş katılımının tek seferlik bir aktivite değil, proje boyunca devam eden bir süreç olduğunu kavramak." },
-                    { type: "Günün İpucu", content: "Paydaşları projenin 'yolcuları' değil, 'mürettebatı' olarak görmeye çalışın. Onların katılımı, geminin doğru limana varması için kritiktir." },
-                    { type: "Tekrar Sorusu", content: "Direnç gösteren bir paydaşı projeye dahil etmek için hangi iletişim ve kişilerarası becerileri kullanmalıyım?" }
+            { week: 7, phase: 2, title: "Çevik Paydaş Yönetimi ve İletişim", days: [
+                { day: "Pazartesi", title: "Paydaş Etkileşimi", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Bölüm 5." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Stakeholder Stewardship', 'Educating People about agile', 'Engaging Stakeholders', 'Methods of Stakeholder Engagement'. Toplam: ~11 dk." },
+                    { type: "Alınacak Notlar", content: "Çevik projelerde paydaş katılımının neden sürekli olması gerektiğini açıklayın." }
                 ]},
-                { day: "Salı", title: "Paydaş Senaryoları", tasks: [
-                    { type: "Okunacak Bölümler", content: "Dünkü notlarınız ve ilgili test sorularının açıklamaları." },
-                    { type: "Alınacak Notlar", content: "Farklı paydaş senaryoları için (örn: gücü yüksek ama ilgisi düşük bir direktör, projenin detaylarına fazla müdahale eden bir uzman) nasıl bir katılım stratejisi izleyeceğinizi yazın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Teorik bilgiyi pratik durumsal sorulara uygulama becerisi kazanmak. 2) PMP sınavının 'en iyi' yanıtı aradığını, sadece 'doğru' olanı değil." },
-                    { type: "Günün İpucu", content: "Her senaryo sorusunda kendinize sorun: 'Bir proje yöneticisi olarak ilk yapmam gereken şey nedir?' veya 'Bu durumu önlemek için ne yapmalıydım?'." },
-                    { type: "Tekrar Sorusu", content: "Dünkü öğrendiklerim, bugünkü senaryo sorularını çözmeme nasıl yardımcı oldu?" }
+                { day: "Salı", title: "Ortak Vizyon ve Modelleme", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Modelleme ve Persona." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Agile Chartering', 'Definition of Done', 'Set a shared vision', 'Agile Modeling', 'Personas'. Toplam: ~16 dk." },
+                    { type: "Alınacak Notlar", content: "Bitti Tanımı (Definition of Done) ve Kabul Kriterleri (Acceptance Criteria) arasındaki farkı yazın. Persona nedir, ne işe yarar?" }
                 ]},
-                { day: "Çarşamba", title: "Ekip Performans Alanı", tasks: [
-                    { type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.2: Ekip Performans Alanı." },
-                    { type: "Alınacak Notlar", content: "Yüksek performanslı bir proje ekibinin özelliklerini (örn: açık iletişim, karşılıklı güven, ortak amaç, yapıcı çatışma) bir zihin haritası şeklinde çizin. Tuckman'ın ekip gelişim aşamalarını (Forming, Storming, Norming, Performing, Adjourning) özetleyin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Proje yöneticisinin temel görevinin bir 'ekip kurmak' ve bu ekibin gelişimi için uygun ortamı yaratmak olduğunu anlamak. 2) Çatışmanın her zaman kötü olmadığını, yapıcı bir şekilde yönetildiğinde daha iyi kararlar alınmasını sağlayabileceğini kavramak." },
-                    { type: "Günün İpucu", content: "Ekip üyelerini 'kaynak' olarak değil, 'insan' olarak görün. Duygusal zeka (EQ), teknik bilgiden (IQ) daha önemli olabilir." },
-                    { type: "Tekrar Sorusu", content: "Ekip 'Storming' (Fırtına) aşamasındayken, bir lider olarak rolüm ne olmalıdır?" }
+                { day: "Çarşamba", title: "İletişim ve İşbirliği Teknikleri", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - İşbirliği." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Communicating with stakeholders', 'Green Zone and Red Zone', 'How to conduct a workshop', 'Brainstorming', 'Collaboration Games'. Toplam: ~26 dk." },
+                    { type: "Alınacak Notlar", content: "Bilgi radyatörleri (Information Radiators) nelerdir? Örnekler verin (Kanban tahtası, yanma grafiği vb.)." }
                 ]},
-                { day: "Perşembe", title: "Ekip Senaryoları", tasks: [
-                    { type: "Okunacak Bölümler", content: "Dünkü notlarınız ve ilgili test sorularının açıklamaları." },
-                    { type: "Alınacak Notlar", content: "Ekip içi çatışma, düşük motivasyon, performans sorunu gibi senaryolar için çözüm adımlarını yazın. Çatışma yönetimi tekniklerini (İşbirliği/Sorun Çözme, Geri Çekilme, Zorlama vb.) ve hangisinin 'kazan-kazan' durumu yarattığını not alın." },
-                    { type: "Öğrenme Çıktısı", content: "1) Ekip sorunlarını doğrudan ve proaktif bir şekilde ele almanın önemini kavramak. 2) Farklı durumlarda farklı liderlik ve çatışma yönetimi stillerini uygulama becerisi kazanmak." },
-                    { type: "Günün İpucu", content: "PMP sınavında, ekip sorunlarını görmezden gelmek veya başkasına devretmek neredeyse her zaman yanlış cevaptır. Proaktif ve işbirlikçi çözümleri arayın." },
-                    { type: "Tekrar Sorusu", content: "İki ekip üyesi arasında kişisel bir anlaşmazlık varsa, ilk adımım ne olmalı?" }
+                { day: "Perşembe", title: "Yumuşak Beceriler ve Çatışma Yönetimi", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Duygusal Zeka ve Çatışma Yönetimi." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Using Critical Soft Skills', 'Emotional Intelligence' (Agile), 'Negotiation', 'Active Listening', 'Facilitation', 'Conflict Resolution', 'Participatory Decision Models', 'Meetings'. Toplam: ~26 dk." },
+                    { type: "Alınacak Notlar", content: "Çatışma yönetimi tekniklerini (İşbirliği, Geri Çekilme, Zorlama vb.) listeleyin." }
                 ]},
-                { day: "Cuma", title: "Faz 2 - İlk Kısım Tekrarı", tasks: [
-                    { type: "Okunacak Bölümler", content: "Hafta 5, 6 ve 7'de aldığınız tüm notlar." },
-                    { type: "Alınacak Notlar", content: "Çeviklik, Liderlik, Paydaş ve Ekip yönetimi arasındaki bağlantıları gösteren bir kavram haritası oluşturun. Bu konuların birbirini nasıl desteklediğini oklarla gösterin." },
-                    { type: "Öğrenme Çıktısı", content: "1) Modern proje yönetiminin insan odaklı (paydaşlar, ekip) ve değer odaklı (çeviklik) olduğunu bütünsel bir şekilde anlamak. 2) Zayıf olduğunuz konuları belirleyerek sonraki haftalara hazırlık yapmak." },
-                    { type: "Günün İpucu", content: "'PMP Zihniyeti'ni düşünün: Hizmetkâr lider ol, işbirliği yap, değer odaklan, proaktif ol." },
-                    { type: "Tekrar Sorusu", content: "Geçtiğimiz üç haftada öğrendiğim en önemli 3 kavram nedir ve bunları sınav gününe kadar nasıl unutmam?" }
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Burn and Velocity charts' videosunu izleyerek çevik metrikleri pekiştirin." },
+                    { type: "Haftanın Quizleri", content: "Bu hafta öğrendiğiniz konularla ilgili önceki quiz'lerdeki yanlışlarınızı gözden geçirin." },
+                    { type: "Alınacak Notlar", content: "Çevik bir projede iletişimi ve şeffaflığı artırmak için kullanılabilecek 5 aracı listeleyin." }
                 ]}
             ]},
-            { week: 8, phase: 3, title: "Geliştirme Yaklaşımı & Planlama", days: [
-                { day: "Pazartesi", title: "Geliştirme Yaklaşımı", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.3: Geliştirme Yaklaşımı ve Yaşam Döngüsü Performans Alanı." }, { type: "Alınacak Notlar", content: "Farklı geliştirme yaklaşımlarını seçerken göz önünde bulundurulması gereken faktörleri bir karar ağacı şeklinde çizin." }, { type: "Öğrenme Çıktısı", content: "1) Projenin özelliklerine göre en uygun geliştirme yaklaşımını nasıl seçeceğini bilmek. 2) Ritim (cadence) ve teslimat sıklığının proje akışını nasıl etkilediğini anlamak." }, { type: "Tekrar Sorusu", content: "Bir projenin hem öngörücü hem de çevik unsurlar içermesi ne anlama gelir?" }]},
-                { day: "Salı", title: "Geliştirme Yaklaşımı Senaryoları", tasks: [{ type: "Okunacak Bölümler", content: "Dünkü notlarınız ve ilgili test sorularının açıklamaları." }, { type: "Alınacak Notlar", content: "'Bu proje için en uygun yaklaşım hangisidir?' tarzı sorular için bir kontrol listesi oluşturun." }, { type: "Öğrenme Çıktısı", content: "1) Farklı proje bağlamlarını analiz etme ve en uygun yaşam döngüsünü gerekçelendirme becerisi kazanmak." }, { type: "Tekrar Sorusu", content: "Hangi durumda kesinlikle öngörücü bir yaklaşım seçmem gerekir?" }]},
-                { day: "Çarşamba", title: "Planlama", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.4: Planlama Performans Alanı." }, { type: "Alınacak Notlar", content: "Öngörücü ve Çevik planlama arasındaki farkları bir tablo ile karşılaştırın. Çevik planlama seviyelerini bir huni şeklinde çizin." }, { type: "Öğrenme Çıktısı", content: "1) Planlamanın, projenin seçilen geliştirme yaklaşımına göre uyarlanması gerektiğini anlamak. 2) Çevik projelerde de planlama yapıldığını kavramak." }, { type: "Tekrar Sorusu", content: "Çevik bir projede bütçe ve zaman çizelgesi nasıl yönetilir?" }]},
-                { day: "Perşembe", title: "Planlama Senaryoları", tasks: [{ type: "Okunacak Bölümler", content: "Dünkü notlarınız ve ilgili test sorularının açıklamaları." }, { type: "Alınacak Notlar", content: "Tahminleme ile ilgili senaryolar için hangi tekniğin ne zaman kullanılacağını not alın." }, { type: "Öğrenme Çıktısı", content: "1) Planlama ile ilgili durumsal sorularda projenin bağlamına dikkat etmenin önemini kavramak." }, { type: "Tekrar Sorusu", content: "Bir projenin başında çok fazla belirsizlik varsa, hangi tahminleme tekniği daha uygun olur?" }]},
-                { day: "Cuma", title: "Hafta Tekrarı", tasks: [{ type: "Okunacak Bölümler", content: "Bu haftanın notları." }, { type: "Alınacak Notlar", content: "Proje yaşam döngüsü ve planlama arasındaki ilişkiyi özetleyen bir makale taslağı hazırlayın." }, { type: "Öğrenme Çıktısı", content: "1) Geliştirme yaklaşımı ve planlamanın ayrılmaz bir bütün olduğunu anlamak." }, { type: "Tekrar Sorusu", content: "Bu hafta öğrendiklerim, ilk haftalardaki planlama anlayışımı nasıl değiştirdi?" }]}
+            { week: 8, phase: 2, title: "Çevik Planlama ve Sürekli İyileştirme", days: [
+                { day: "Pazartesi", title: "Uyarlanabilir Planlama", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Uyarlanabilir Planlama." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'What is adaptive planning', 'Agile Plans', 'Progressive Elaboration', 'Value Decomposition and Design the product box', 'Coarse Requirements', 'Timeboxing', 'Ideal Time'. Toplam: ~22 dk." },
+                    { type: "Alınacak Notlar", content: "Kullanıcı Hikayesi (User Story) formatını (Bir <rol> olarak...) ve INVEST kriterlerini yazın." }
+                ]},
+                { day: "Salı", title: "Tahminleme Teknikleri", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Tahminleme." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'User Stories', 'User Story Backlog', 'Assigning points to the stories using Fibonacci Sequence', 'Story Points and T-Shirt Sizing', 'Wideband Delphi', 'Using Planning Poker to assign story points'. Toplam: ~27 dk." },
+                    { type: "Alınacak Notlar", content: "Hikaye Puanı (Story Point) nedir? Planlama Pokeri nasıl oynanır?" }
+                ]},
+                { day: "Çarşamba", title: "Sürekli İyileştirme (Kaizen)", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Sürekli İyileştirme." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Iteration and Release Planning', 'Understand how problems happens', 'Technical Debt', 'Success and Failure Modes', 'Lead time and Cycle time', 'Defects', 'Variances and Control Limits', 'Fixing Problems', 'Kaizen'. Toplam: ~42 dk." },
+                    { type: "Alınacak Notlar", content: "Teknik Borç (Technical Debt) nedir? Kaizen felsefesini açıklayın." }
+                ]},
+                { day: "Perşembe", title: "Retrospektifler", tasks: [
+                    { type: "Okunacak Bölümler", content: "ÇUK - Retrospektifler." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Customize Processes', 'Value Stream Maps', 'Project Pre-Mortems', 'Retrospective Intro' ve 5 adım videosu ('Set the stage', 'Gather Data', 'Generate insights', 'Decide what to to do', 'Close the retrospective'), 'Team self-assessment'. Toplam: ~30 dk." },
+                    { type: "Alınacak Notlar", content: "Bir retrospektifin 5 adımını yazın. Değer Akış Haritalama (Value Stream Mapping) nedir?" }
+                ]},
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Story Maps and Product Roadmaps', 'Iterations and Spikes' videolarını izleyin." },
+                    { type: "Haftanın Quizleri", content: "Udemy: 'Agile Planning, Problem Resolution and Continuous Improvement' bölümünün sonundaki 'Quiz'i (25 soru) çözün." },
+                    { type: "Alınacak Notlar", content: "Çevik bir projede karşılaşılabilecek 3 yaygın sorunu ve olası çözümlerini yazın." }
+                ]}
             ]},
-            { week: 9, phase: 3, title: "Proje Çalışması & Teslimat", days: [
-                { day: "Pazartesi", title: "Proje Çalışması", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.5: Proje Çalışması Performans Alanı." }, { type: "Alınacak Notlar", content: "Rekabet eden kısıtları dengelemenin önemini vurgulayın. Proje boyunca öğrenme ve bilgi yönetiminin önemini not alın." }, { type: "Öğrenme Çıktısı", content: "1) 'Proje çalışmasının' planları eyleme dönüştürme süreci olduğunu anlamak. 2) Değişiklik kontrolü ve tedarik yönetiminin önemini kavramak." }, { type: "Tekrar Sorusu", content: "Onaylanmamış bir değişikliği önlemek için hangi süreç işletilmelidir?" }]},
-                { day: "Salı", title: "Proje Çalışması Senaryoları", tasks: [{ type: "Okunacak Bölümler", content: "Dünkü notlarınız ve ilgili test sorularının açıklamaları." }, { type: "Alınacak Notlar", content: "Tedarik ve sözleşme yönetimi ile ilgili senaryoları özetleyin." }, { type: "Öğrenme Çıktısı", content: "1) Proje yürütülürken ortaya çıkan sorunlara proaktif yaklaşma becerisi kazanmak." }, { type: "Tekrar Sorusu", content: "Bir satıcı sözleşme şartlarını yerine getirmiyorsa, ilk adımım ne olmalı?" }]},
-                { day: "Çarşamba", title: "Teslimat", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.6: Teslimat Performans Alanı." }, { type: "Alınacak Notlar", content: "'Değer' teslimatının nihai hedef olduğunu vurgulayın. Kalite Maliyeti ve 'Bitti Tanımı'nı tekrar gözden geçirin." }, { type: "Öğrenme Çıktısı", content: "1) Projenin çıktısı (output) ile sonucu (outcome) arasındaki farkı anlamak." }, { type: "Tekrar Sorusu", content: "Bir teslimat 'Bitti Tanımı'na uymuyorsa ne yapılmalıdır?" }]},
-                { day: "Perşembe", title: "Teslimat Senaryoları", tasks: [{ type: "Okunacak Bölümler", content: "Dünkü notlarınız ve ilgili test sorularının açıklamaları." }, { type: "Alınacak Notlar", content: "Kalite sorunları ve kapsamın doğrulanması ile ilgili senaryoları not alın." }, { type: "Öğrenme Çıktısı", content: "1) Kalite kontrol ve kapsam doğrulama süreçlerinin ilişkisini anlamak." }, { type: "Tekrar Sorusu", content: "Müşteri bir teslimatı kabul etmiyorsa, bu bir kalite sorunu mu yoksa kapsam sorunu mu olabilir?" }]},
-                { day: "Cuma", title: "Hafta Tekrarı", tasks: [{ type: "Okunacak Bölümler", content: "Bu haftanın notları." }, { type: "Alınacak Notlar", content: "Proje çalışması ve teslimat arasındaki döngüyü bir şema ile gösterin." }, { type: "Öğrenme Çıktısı", content: "1) Projenin değer yaratma motorunun bu iki alan arasındaki etkileşim olduğunu kavramak." }, { type: "Tekrar Sorusu", content: "Bir proje yöneticisinin temel odak noktası planı takip etmek mi, değer teslim etmek mi olmalıdır?" }]}
+            // FAZ 3: Yürütme, İzleme, Kontrol ve Kapanış (Hafta 9-10)
+            { week: 9, phase: 3, title: "Geleneksel Projeyi Yürütme", days: [
+                { day: "Pazartesi", title: "İşi Yönetme ve Bilgi Akışı", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 4.3, 4.4, 8.2." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Executing', 'Direct and manage Project work', 'Manage Project Knowledge', 'Manage Quality'. Toplam: ~27 dk." },
+                    { type: "Alınacak Notlar", content: "Proje Çalışmasını Yönlendirme ve Yönetme sürecinin ana girdilerini ve çıktılarını yazın." }
+                ]},
+                { day: "Salı", title: "Kaynak ve Ekip Yönetimi", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 9.3, 9.4, 9.5." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Acquire Resources', 'Develop Team', 'OSCAR Model', 'Drexler Sibbet Team Model', 'Manage Team'. Toplam: ~38 dk." },
+                    { type: "Alınacak Notlar", content: "Ekip Geliştirme ve Ekibi Yönetme arasındaki farkı açıklayın." }
+                ]},
+                { day: "Çarşamba", title: "İletişim, Risk ve Tedarik", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 10.2, 11.6, 12.2." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'People Management Terms', 'MBTI', 'Project Communications', 'Implement Risk Responses', 'Conduct Procurements'. Toplam: ~28 dk." },
+                    { type: "Alınacak Notlar", content: "İletişimi Yönetme sürecinin önemini vurgulayın. Risk Yanıtlarını Uygulama nedir?" }
+                ]},
+                { day: "Perşembe", title: "Paydaş Yönetimi ve Faz Sonu", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 13.3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Manage Stakeholder Engagement', 'End of Executing'. Toplam: ~4 dk." },
+                    { type: "Alınacak Notlar", content: "Paydaş Katılımını Yönetme sürecinin ana araç ve tekniklerini listeleyin." }
+                ]},
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Haftanın Quizleri", content: "Önceki haftaların quiz'lerinden rastgele 20 soru çözün. Özellikle Yürütme süreçleri ile ilgili olanlara odaklanın." },
+                    { type: "Alınacak Notlar", content: "Yürütme süreç grubunun temel amacını ve Planlama ile İzleme-Kontrol arasındaki köprü rolünü özetleyin." }
+                ]}
             ]},
-            { week: 10, phase: 3, title: "Ölçüm, Belirsizlik ve Genel Tekrar", days: [
-                { day: "Pazartesi", title: "Ölçüm", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.7: Ölçüm Performans Alanı." }, { type: "Alınacak Notlar", content: "Kazanılmış Değer Yönetimi (EVM) formüllerini ve çevik metrikleri bir formül kağıdına yazın." }, { type: "Öğrenme Çıktısı", content: "1) Proje performansını objektif verilerle ölçmenin önemini anlamak. 2) CPI ve SPI değerlerini yorumlayabilmek." }, { type: "Tekrar Sorusu", content: "CPI=0.8 ve SPI=1.2 olan bir proje için ne söylenebilir?" }]},
-                { day: "Salı", title: "Belirsizlik", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 2.8: Belirsizlik Performans Alanı." }, { type: "Alınacak Notlar", content: "Risk, belirsizlik, muğlaklık ve karmaşıklık farklarını not alın. Tehditler ve Fırsatlar için risk yanıt stratejilerini bir tablo halinde yazın." }, { type: "Öğrenme Çıktısı", content: "1) Risk yönetiminin proaktif bir süreç olduğunu anlamak. 2) Belirsizliğin yüksek olduğu durumlarda çevik yaklaşımların neden etkili olduğunu kavramak." }, { type: "Tekrar Sorusu", content: "Bir riskin hem tehdit hem de fırsat unsuru içermesi mümkün müdür?" }]},
-                { day: "Çarşamba", title: "Uyarlama ve Araçlar", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Bölüm 3: Uyarlama ve Bölüm 4: Modeller, Metotlar ve Eserler." }, { type: "Alınacak Notlar", content: "Uyarlama sürecinin adımlarını özetleyin. Sık kullanılan modellerden ve metotlardan birer örnek seçip açıklayın." }, { type: "Öğrenme Çıktısı", content: "1) Proje yönetiminde 'tek bir doğru yol' olmadığını içselleştirmek. 2) Geniş bir model ve metot yelpazesine hakim olmanın önemini anlamak." }, { type: "Tekrar Sorusu", content: "Küçük bir proje için kapsamlı bir risk yönetimi planı hazırlamak iyi bir uyarlama örneği midir?" }]},
-                { day: "Perşembe", title: "Ekler ve Son Tekrar", tasks: [{ type: "Okunacak Bölümler", content: "PMBOK7 - Ekler (X1-X5) Hızlı Okuma." }, { type: "Alınacak Notlar", content: "Her ekten (Sponsor, PYO, Ürün vb.) aklınızda kalan en önemli 1-2 kavramı not alın." }, { type: "Öğrenme Çıktısı", content: "1) Proje yönetiminin daha geniş bir organizasyonel bağlam içinde yer aldığını görmek. 2) Sponsor, PYO gibi rollerin önemini anlamak." }, { type: "Tekrar Sorusu", content: "Güçlü bir sponsorun projeye en büyük katkısı nedir?" }]},
-                { day: "Cuma", title: "Tüm Konular Genel Tekrar", tasks: [{ type: "Okunacak Bölümler", content: "Bugüne kadar aldığınız tüm notlar." }, { type: "Alınacak Notlar", content: "Tüm PMP konularını kapsayan büyük bir zihin haritası oluşturmaya başlayın." }, { type: "Öğrenme Çıktısı", content: "1) Tüm konuların birbiriyle nasıl ilişkili olduğunu görmek. 2) Deneme sınavları öncesi son eksikleri tespit etmek." }, { type: "Tekrar Sorusu", content: "10 haftanın sonunda, PMP sınavına bakış açım ilk gündekinden ne kadar farklı?" }]}
+            { week: 10, phase: 3, title: "İzleme, Kontrol ve Kapanış", days: [
+                { day: "Pazartesi", title: "Entegre Kontrol ve Kapsam", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 4.5, 4.6, 5.5, 5.6." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Intro to Monitoring and Controlling', 'Monitor and Control Project Work', 'Perform Integrated Change Control', 'Validate Scope', 'Control Scope, Schedule, Cost'. Toplam: ~43 dk." },
+                    { type: "Alınacak Notlar", content: "Entegre Değişiklik Kontrolü sürecinin adımlarını yazın. Kapsamı Doğrulama ve Kapsamı Kontrol Etme farkı nedir?" }
+                ]},
+                { day: "Salı", title: "Kazanılmış Değer Yönetimi (EVM)", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 6.6, 7.4 (EVM ile ilgili bölümler)." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Earned Value Management Intro', 'Earned Value Management', 'Earned Value Management Formulas', 'Earned Value Management Scenario 1'. Toplam: ~40 dk." },
+                    { type: "Alınacak Notlar", content: "Tüm EVM formüllerini (CPI, SPI, EAC, ETC, VAC, TCPI) bir formül kağıdına yazın ve anlamlarını açıklayın." }
+                ]},
+                { day: "Çarşamba", title: "Kalite, Kaynak, İletişim Kontrolü", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 8.3, 9.6, 10.3." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'EVM Formulas Tips', 'Earned Value Management Scenario 2 Problem & Answers', 'Control Quality', 'Control Resources', 'Monitor Communication'. Toplam: ~28 dk." },
+                    { type: "Alınacak Notlar", content: "Kalite Kontrol araçlarını (örn: Pareto, Kontrol Şeması, Histogram) listeleyin." }
+                ]},
+                { day: "Perşembe", title: "Risk, Tedarik, Paydaş Kontrolü ve Kapanış", tasks: [
+                    { type: "Okunacak Bölümler", content: "SGK - Bölüm 11.7, 12.3, 13.4, 4.7." },
+                    { type: "Video Pekiştirme (Udemy)", content: "İzlenecekler: 'Monitor Risk', 'Control Procurements', 'Monitor Stakeholder Engagement', 'Close Project or Phase'. Toplam: ~21 dk." },
+                    { type: "Alınacak Notlar", content: "Proje veya Fazı Kapatma sürecinin ana aktivitelerini (sözleşme kapatma, dersler çıkarma, kaynakları serbest bırakma vb.) yazın." }
+                ]},
+                { day: "Cuma", title: "Haftalık Tekrar ve Pratik", tasks: [
+                    { type: "Haftanın Quizleri", content: "İlgili tüm quiz'leri (Integration, Scope, Schedule, Cost, Quality, Resource, Communications, Risk, Procurement, Stakeholders) tekrar çözün. Özellikle yanlışlarınıza odaklanın." },
+                    { type: "Alınacak Notlar", content: "İzleme ve Kontrol süreç grubunun temel amacının 'plan ile performansı karşılaştırmak ve sapmaları yönetmek' olduğunu yazın." }
+                ]}
             ]},
+            // FAZ 4: Sınav Simülasyonu ve Son Hazırlık (Hafta 11-14)
             { week: 11, phase: 4, title: "İlk Tam Deneme Sınavı ve Analiz", days: [
-                { day: "Pazartesi", title: "Deneme Sınavı 1", tasks: [{ type: "Görev", content: "İlk tam süreli (180 soru) deneme sınavınızı çözün." }]},
-                { day: "Salı", title: "Analiz (1-60)", tasks: [{ type: "Görev", content: "Sınavın ilk 60 sorusunu detaylı analiz edin (Tüm doğru ve yanlışların açıklamalarını okuyun)." }]},
-                { day: "Çarşamba", title: "Analiz (61-120)", tasks: [{ type: "Görev", content: "Sınavın 61-120 arasındaki sorularını detaylı analiz edin." }]},
-                { day: "Perşembe", title: "Analiz (121-180)", tasks: [{ type: "Görev", content: "Sınavın 121-180 arasındaki sorularını detaylı analiz edin." }]},
-                { day: "Cuma", title: "Odaklı Tekrar", tasks: [{ type: "Görev", content: "En zayıf olduğunuz 3 alanı belirleyin ve bu konuları tekrar okuyun." }]}
+                { day: "Pazartesi", title: "Deneme Sınavı 1", tasks: [
+                    { type: "Görev", content: "İlk tam süreli (180 soru) deneme sınavınızı çözün. Udemy'deki '180 Question Mock Exam' bunun için harika bir kaynak." }
+                ]},
+                { day: "Salı", title: "Analiz (1-60)", tasks: [
+                    { type: "Görev", content: "Sınavın ilk 60 sorusunu detaylı analiz edin (Tüm doğru ve yanlışların açıklamalarını okuyun)." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Yanlış yaptığınız soruların ait olduğu konularla ilgili Udemy'deki 'PM Mindset' veya 'ECO Review' bölümlerindeki ilgili videoları tekrar izleyin." }
+                ]},
+                { day: "Çarşamba", title: "Analiz (61-120)", tasks: [
+                    { type: "Görev", content: "Sınavın 61-120 arasındaki sorularını detaylı analiz edin." },
+                    { type: "Günün İpucu", content: "Sadece yanlışlarınıza değil, doğru yaptığınız ama emin olamadığınız sorulara da odaklanın." }
+                ]},
+                { day: "Perşembe", title: "Analiz (121-180)", tasks: [
+                    { type: "Görev", content: "Sınavın 121-180 arasındaki sorularını detaylı analiz edin." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Udemy'deki 'Drag and Drop Questions' bölümünden ilk 7 videoyu izleyerek pratik yapın." }
+                ]},
+                { day: "Cuma", title: "Odaklı Tekrar", tasks: [
+                    { type: "Görev", content: "En zayıf olduğunuz 3 alanı belirleyin ve bu konuları kitaplardan ve notlarınızdan tekrar okuyun." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Bu 3 zayıf alanla ilgili Udemy videolarını hızlandırarak tekrar izleyin." }
+                ]}
             ]},
             { week: 12, phase: 4, title: "İkinci Tam Deneme ve Odaklı Tekrar", days: [
-                { day: "Pazartesi", title: "Deneme Sınavı 2", tasks: [{ type: "Görev", content: "İkinci tam süreli deneme sınavınızı çözün." }]},
+                { day: "Pazartesi", title: "Deneme Sınavı 2", tasks: [{ type: "Görev", content: "İkinci tam süreli deneme sınavınızı çözün (farklı bir kaynaktan veya Udemy'nin ek sorularından)." }]},
                 { day: "Salı", title: "Analiz (1-90)", tasks: [{ type: "Görev", content: "Sınavın ilk 90 sorusunu analiz edin. İlk sınava göre gelişiminizi gözlemleyin." }]},
                 { day: "Çarşamba", title: "Analiz (91-180)", tasks: [{ type: "Görev", content: "Sınavın son 90 sorusunu analiz edin." }]},
-                { day: "Perşembe", title: "Odaklı Tekrar 1", tasks: [{ type: "Görev", content: "Bu sınavda en zayıf çıkan 2 alana odaklanarak konu tekrarı yapın." }]},
-                { day: "Cuma", title: "Odaklı Tekrar 2", tasks: [{ type: "Görev", content: "Zayıf alanlarınıza özel testler çözün." }]}
+                { day: "Perşembe", title: "Odaklı Tekrar 1", tasks: [
+                    { type: "Görev", content: "Bu sınavda en zayıf çıkan 2 alana odaklanarak konu tekrarı yapın." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Udemy: '200 Scenario Practice Questions with Video Explanation' bölümünden, zayıf olduğunuz alanlarla ilgili senaryoları izleyin." }
+                ]},
+                { day: "Cuma", title: "Odaklı Tekrar 2", tasks: [
+                    { type: "Görev", content: "Zayıf alanlarınıza özel testler çözün (varsa ek kaynaklarınızdan)." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Udemy'deki 'Drag and Drop Questions' bölümünden kalan videoları (8-14) izleyin." }
+                ]}
             ]},
             { week: 13, phase: 4, title: "Üçüncü Tam Deneme ve Zihin Haritaları", days: [
                 { day: "Pazartesi", title: "Deneme Sınavı 3", tasks: [{ type: "Görev", content: "Üçüncü tam süreli deneme sınavınızı çözün." }]},
                 { day: "Salı", title: "Hızlı Analiz", tasks: [{ type: "Görev", content: "Sadece yanlışlarınıza ve emin olamadığınız doğrulara odaklanarak hızlı analiz yapın." }]},
-                { day: "Çarşamba", title: "Zihin Haritaları", tasks: [{ type: "Görev", content: "Tüm notlarınızı kullanarak ana konular için zihin haritaları (mind maps) oluşturun." }]},
-                { day: "Perşembe", title: "Son Tekrar ve Başvuru", tasks: [{ type: "Görev", content: "Oluşturduğunuz zihin haritalarını ve formül kağıdınızı tekrar edin. PMI sınav başvurusunu doldurun ve gönderin." }]},
-                { day: "Cuma", title: "Hafif Tekrar", tasks: [{ type: "Görev", content: "En çok zorlandığınız 1-2 konuya son kez göz atın." }]}
+                { day: "Çarşamba", title: "Zihin Haritaları", tasks: [{ type: "Görev", content: "Tüm notlarınızı kullanarak ana konular için zihin haritaları (mind maps) oluşturun. Süreç grupları, bilgi alanları, çeviklik vb." }]},
+                { day: "Perşembe", title: "Son Tekrar ve Başvuru", tasks: [
+                    { type: "Görev", content: "Oluşturduğunuz zihin haritalarını ve formül kağıdınızı tekrar edin. PMI sınav başvurusunu doldurun ve gönderin." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Udemy: 'PMP Application' ile ilgili videoları başvuru sırasında kullanın. İpucu: 'Writing the description using AI' videosuna göz atın." },
+                    { type: "Opsiyonel Tekrar", content: "Zamanınız kalırsa, '100 Drag & Drop Questions in 1 Video' ile hızlı bir tekrar yapın."}
+                ]},
+                { day: "Cuma", title: "Hafif Tekrar", tasks: [{ type: "Görev", content: "En çok zorlandığınız 1-2 konuya son kez göz atın. Formül kağıdınızı ezberden yazmaya çalışın." }]}
             ]},
             { week: 14, phase: 4, title: "Zihinsel Hazırlık ve Dinlenme", days: [
                 { day: "Pazartesi", title: "Genel Tekrar", tasks: [{ type: "Görev", content: "Kendi notlarınız ve zihin haritalarınız üzerinden son genel tekrar." }]},
-                { day: "Salı", title: "Sınav Stratejisi", tasks: [{ type: "Görev", content: "Sınav stratejinizi belirleyin (zaman yönetimi, mola kullanımı vb.)." }]},
+                { day: "Salı", title: "Sınav Stratejisi", tasks: [
+                    { type: "Görev", content: "Sınav stratejinizi belirleyin (zaman yönetimi, mola kullanımı vb.)." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Udemy: 'Taking the PMP Exam' (9dk), 'Time Management on the PMP' (12dk) videolarını izleyin." }
+                ]},
                 { day: "Çarşamba", title: "Moral Testi", tasks: [{ type: "Görev", content: "Hafif tempolu, moral yükseltici 50 soruluk bir test çözün." }]},
-                { day: "Perşembe", title: "Dinlenme", tasks: [{ type: "Görev", content: "DERS ÇALIŞMAYIN! Zihninizi tamamen dinlendirin." }]},
-                { day: "Cuma", title: "Dinlenme", tasks: [{ type: "Görev", content: "DERS ÇALIŞMAYIN! Hazırlığınıza güvenin ve rahatlayın. Sınav için gerekli hazırlıkları yapın." }]}
+                { day: "Perşembe", title: "Dinlenme", tasks: [
+                    { type: "Görev", content: "DERS ÇALIŞMAYIN! Zihninizi tamamen dinlendirin." },
+                    { type: "Video Pekiştirme (Udemy)", content: "Udemy: '5 Things to do the day before your PMP Exam' (8dk) videosunu izleyin." }
+                ]},
+                { day: "Cuma", title: "SINAV GÜNÜ", tasks: [{ type: "Görev", content: "Hazırlığınıza güvenin ve rahatlayın. Başarılar!" }]}
             ]}
         ];
-        
+
+
         document.addEventListener('DOMContentLoaded', () => {
+            // This function initializes the entire application
             const planContainer = document.getElementById('study-plan-container');
             const phaseNavContainer = document.getElementById('phase-navigation');
             const totalDays = allWeeksData.reduce((acc, week) => acc + week.days.length, 0);
             let completedDays = 0;
             let state = {};
 
+            // Information about the phases of the study plan
             const phaseInfo = {
                 1: { name: "Faz 1: Temeller", weeks: 4 },
-                2: { name: "Faz 2: Çeviklik", weeks: 3 },
-                3: { name: "Faz 3: Entegrasyon", weeks: 3 },
+                2: { name: "Faz 2: Çeviklik", weeks: 4 },
+                3: { name: "Faz 3: Yürütme & Kontrol", weeks: 2 },
                 4: { name: "Faz 4: Simülasyon", weeks: 4 }
             };
 
+            // Icons and colors for different task types for better visual distinction
             const taskIcons = {
                 "Okunacak Bölümler": "fa-book-open",
+                "Video Pekiştirme (Udemy)": "fa-play-circle",
+                "Haftanın Quizleri": "fa-vial-circle-check",
                 "Alınacak Notlar": "fa-pen-to-square",
-                "Öğrenme Çıktısı": "fa-bullseye",
+                "Opsiyonel Tekrar": "fa-star",
                 "Günün İpucu": "fa-lightbulb",
-                "Tekrar Sorusu": "fa-circle-question",
                 "Görev": "fa-clipboard-check"
             };
-            
+
             const taskColors = {
                 "Okunacak Bölümler": "border-l-sky-500",
+                "Video Pekiştirme (Udemy)": "border-l-red-500",
+                "Haftanın Quizleri": "border-l-teal-500",
                 "Alınacak Notlar": "border-l-amber-500",
-                "Öğrenme Çıktısı": "border-l-emerald-500",
+                "Opsiyonel Tekrar": "border-l-purple-500",
                 "Günün İpucu": "border-l-violet-500",
-                "Tekrar Sorusu": "border-l-rose-500",
-                 "Görev": "border-l-indigo-500"
+                "Görev": "border-l-indigo-500"
             };
 
+            // Load user's progress from localStorage
             function loadState() {
                 const savedState = localStorage.getItem('pmpPlanState');
                 if (savedState) {
@@ -445,14 +482,15 @@
                 }
             }
 
+            // Save user's progress to localStorage
             function saveState() {
                 localStorage.setItem('pmpPlanState', JSON.stringify(state));
             }
 
+            // Update the main progress bar and summary text
             function updateProgress() {
                 completedDays = Object.values(state).filter(Boolean).length;
                 const progressPercentage = totalDays > 0 ? (completedDays / totalDays) * 100 : 0;
-                
                 const progressBar = document.getElementById('progress-bar');
                 const progressText = document.getElementById('progress-text');
                 const progressSummary = document.getElementById('progress-summary');
@@ -469,6 +507,7 @@
                 }
             }
 
+            // Renders the study plan weeks and days into the main container
             function renderPlan(filterPhase = null) {
                 planContainer.innerHTML = '';
                 const filteredWeeks = filterPhase ? allWeeksData.filter(w => w.phase === filterPhase) : allWeeksData;
@@ -521,7 +560,8 @@
 
                 addEventListeners();
             }
-            
+
+            // Renders the phase navigation buttons
             function renderPhaseNavigation() {
                 phaseNavContainer.innerHTML = `
                     <button class="phase-btn px-4 py-2 rounded-lg font-semibold transition-all duration-200 bg-white shadow-sm hover:bg-indigo-100 active" data-phase="all">Tüm Plan</button>
@@ -540,17 +580,23 @@
                 });
             }
 
+            // Adds event listeners for accordions and checkboxes
             function addEventListeners() {
+                // Accordion functionality
                 document.querySelectorAll('.week-header').forEach(header => {
                     header.addEventListener('click', () => {
                         const content = header.nextElementSibling;
                         const icon = header.querySelector('i');
+                        
+                        // Close other open accordions
                         document.querySelectorAll('.week-header').forEach(otherHeader => {
                             if (otherHeader !== header) {
                                 otherHeader.nextElementSibling.style.maxHeight = '0px';
                                 otherHeader.querySelector('i').classList.remove('rotate-180');
                             }
                         });
+
+                        // Toggle the clicked accordion
                         if (content.style.maxHeight && content.style.maxHeight !== '0px') {
                             content.style.maxHeight = '0px';
                             icon.classList.remove('rotate-180');
@@ -561,15 +607,18 @@
                     });
                 });
 
+                // Checkbox functionality for tracking progress
                 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     checkbox.addEventListener('change', (e) => {
                         const dayId = e.target.dataset.dayId;
                         state[dayId] = e.target.checked;
-                        
+
+                        // Apply 'completed' style to task cards
                         const taskCardsContainer = e.target.closest('.bg-slate-50');
                         const taskCards = taskCardsContainer.querySelectorAll('.task-card');
                         taskCards.forEach(card => e.target.checked ? card.classList.add('completed') : card.classList.remove('completed'));
                         
+                        // Check if the entire week is completed
                         const weekId = dayId.split('-')[0] + '-' + dayId.split('-')[1];
                         const weekData = allWeeksData.find(w => `week-${w.week}` === weekId);
                         const allDaysInWeekCompleted = weekData.days.every(day => state[`${weekId}-${day.day}`]);
@@ -586,7 +635,8 @@
                     });
                 });
             }
-
+            
+            // Initializes the Chart.js doughnut chart for phase distribution
             function initializeChart() {
                 const ctx = document.getElementById('phase-chart').getContext('2d');
                 new Chart(ctx, {
@@ -597,10 +647,10 @@
                             label: 'Hafta Sayısı',
                             data: Object.values(phaseInfo).map(p => p.weeks),
                             backgroundColor: [
-                                'rgba(99, 102, 241, 0.7)', 
-                                'rgba(129, 140, 248, 0.7)',
-                                'rgba(165, 180, 252, 0.7)',
-                                'rgba(199, 210, 254, 0.7)'
+                                'rgba(99, 102, 241, 0.7)',  // indigo-500
+                                'rgba(129, 140, 248, 0.7)', // indigo-400
+                                'rgba(165, 180, 252, 0.7)', // indigo-300
+                                'rgba(199, 210, 254, 0.7)'  // indigo-200
                             ],
                             borderColor: [
                                 'rgb(99, 102, 241)',
@@ -634,6 +684,7 @@
                 });
             }
 
+            // Initial application setup
             loadState();
             renderPhaseNavigation();
             renderPlan();
